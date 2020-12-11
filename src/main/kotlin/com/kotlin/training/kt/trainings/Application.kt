@@ -8,10 +8,11 @@ class Application
 fun main(args: Array<String>) {
     val kotlin = Language("Kotlin", "Good", 9)
     val java = Language("Java", "Bad", 25)
-    val javaClone = java.copy()
+    val javaClone = java.copy(description = "Not so bad, but still shitty")
 
     println(kotlin)
     println(java)
+    println(javaClone)
     println(java == javaClone) //call Language.equals
     println(java === javaClone) //call Object.equals
 //    runApplication<Application>(*args)
