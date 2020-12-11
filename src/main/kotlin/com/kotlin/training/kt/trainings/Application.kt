@@ -23,7 +23,11 @@ interface ProgrammingLanguage {
 }
 
 data class VersionedLanguage(val version: Long,
-                             val language: Language) : ProgrammingLanguage by language
+                             val language: Language) : ProgrammingLanguage by language {
+    override fun toString(): String {
+        return "$language, version: $version"
+    }
+}
 
 data class Language(override val name: String,
                     override val age: Byte,
