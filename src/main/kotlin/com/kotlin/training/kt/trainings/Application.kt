@@ -8,7 +8,7 @@ class Application
 fun main(args: Array<String>) {
     val kotlin = Language("Kotlin", "Good", 9)
     val java = Language("Java", "Bad", 25)
-    val javaClone = Language("Java", "Bad", 25)
+    val javaClone = java.copy()
 
     println(kotlin)
     println(java)
