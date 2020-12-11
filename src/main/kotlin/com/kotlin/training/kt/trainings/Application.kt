@@ -13,8 +13,6 @@ fun main(args: Array<String>) {
     println(kotlin)
     println(java)
     println(javaClone)
-    println(java == javaClone) //call Language.equals
-    println(java === javaClone) //call Object.equals
 //    runApplication<Application>(*args)
 }
 
