@@ -81,6 +81,7 @@
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>
+
 				</configuration>
 				<dependencies>
 					<dependency>

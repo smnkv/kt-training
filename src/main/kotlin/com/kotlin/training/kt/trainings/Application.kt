@@ -1,5 +1,7 @@
 package com.kotlin.training.kt.trainings
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
@@ -8,12 +10,27 @@ class Application
 fun main(args: Array<String>) {
     val kotlin = Language(name = "Kotlin", description = "Good", age = 9)
     val java = Language(name = "Java", description = "Bad", age = 25)
-    val javaClone = VersionedLanguage(language = java.copy(description = "Not so bad, but still shitty"), version = 15)
+    val java15 = VersionedLanguage(language = java.copy(description = "Not so bad, but still shitty"), version = 15)
 
     println(kotlin)
     println(java)
-    println(javaClone)
+    println(java15)
+
+    println(java15.toJson())
+    println(java.toJson())
+    println(kotlin.toJson())
+
+    println(java.toJson().fromJson<NotImplementing>())
+    println(java.toJson().fromJson<Language>())
 //    runApplication<Application>(*args)
+}
+
+fun ProgrammingLanguage.toJson(): String {
+    return jacksonObjectMapper().writeValueAsString(this)
+}
+
+inline fun <reified T> String.fromJson(): T { //reified == materialised
+    return jacksonObjectMapper().readValue(this)
 }
 
 interface ProgrammingLanguage {
@@ -28,6 +45,8 @@ data class VersionedLanguage(val version: Long,
         return "$language, version: $version"
     }
 }
+
+data class NotImplementing(val name: String?, val age: Byte?, val description: String?)
 
 data class Language(override val name: String,
                     override val age: Byte,
