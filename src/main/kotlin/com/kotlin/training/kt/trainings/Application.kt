@@ -1,5 +1,7 @@
 package com.kotlin.training.kt.trainings
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -22,6 +24,9 @@ fun main(args: Array<String>) {
 
     println(java.toJson().fromJson<NotImplementing>())
     println(java.toJson().fromJson<Language>())
+    println(java15.toJson().fromJson<VersionedLanguage>())
+
+    val java15FromJson: VersionedLanguage = java15.toJson().fromJson() //roots of VersionedLanguage type
 //    runApplication<Application>(*args)
 }
 
@@ -40,7 +45,11 @@ interface ProgrammingLanguage {
 }
 
 data class VersionedLanguage(val version: Long,
-                             val language: Language) : ProgrammingLanguage by language {
+                             @JsonIgnore val language: Language) : ProgrammingLanguage by language {
+    @JsonCreator
+    constructor(version: Long, name: String, description: String, age: Byte)
+            : this(version = version, language = Language(name, age, description))
+
     override fun toString(): String {
         return "$language, version: $version"
     }
