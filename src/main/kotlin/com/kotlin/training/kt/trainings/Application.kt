@@ -8,7 +8,7 @@ class Application
 fun main(args: Array<String>) {
     val kotlin = Language(name = "Kotlin", description = "Good", age = 9)
     val java = Language(name = "Java", description = "Bad", age = 25)
-    val javaClone = java.copy(description = "Not so bad, but still shitty")
+    val javaClone = VersionedLanguage(language = java.copy(description = "Not so bad, but still shitty"), version = 15)
 
     println(kotlin)
     println(java)
@@ -23,6 +23,9 @@ interface ProgrammingLanguage {
     val description: String
     val age: Byte
 }
+
+data class VersionedLanguage(val version: Long,
+                             val language: Language) : ProgrammingLanguage by language
 
 data class Language(override val name: String,
                     override val age: Byte,
