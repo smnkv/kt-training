@@ -46,7 +46,7 @@ fun main() {
 
     runCatching {
         mySources.watchOnNetflix().subscribe()
-    }.onFailure { println("We dont have netflix, lets go to PirateBay") }
+    }.onFailure { e -> println("We dont have netflix, lets go to PirateBay: $e") }
             .onSuccess { println("Yeeeees!") }
 
     println("Hello form new main!")
