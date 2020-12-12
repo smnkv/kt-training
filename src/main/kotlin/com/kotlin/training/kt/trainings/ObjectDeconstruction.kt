@@ -1,20 +1,49 @@
 package com.kotlin.training.kt.trainings
 
-class ObjectDeconstruction {
+import com.kotlin.training.kt.trainings.Serial.UmbrellaAcademy
+import com.kotlin.training.kt.trainings.Serial.Warrior
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
+import reactor.kotlin.core.util.function.component1
+import reactor.kotlin.core.util.function.component2
 
+interface Serial {
+    val name: String
+    fun watch() {
+        println("Watching $name")
+    }
+
+    data class Warrior(override val name: String = "Warrior") : Serial
+    data class UmbrellaAcademy(override val name: String = "UmbrellaAcademy") : Serial
 }
 
-val java = VersionedLanguage(version = 15, name = "Java", description = "Old language with tons of boiler-plate", age = 25)
-val kotlin = VersionedLanguage(version = 1.41.toLong(), name = "Kotlin", description = "Language witch help to solve issues", age = 9)
+interface Sources {
+    fun loadFromPirateBay(): Mono<Serial>
+    fun watchOnNetflix(): Mono<Serial> = throw RuntimeException("No subscription available.")
+    fun reachOutToFriedWithNetflixSubscription(): Mono<Serial>
+
+    class MySources : Sources {
+        override fun loadFromPirateBay(): Mono<Serial> {
+            return Warrior().toMono()
+        }
+
+        override fun reachOutToFriedWithNetflixSubscription(): Mono<Serial> {
+            return UmbrellaAcademy().toMono()
+        }
+    }
+}
 
 fun main() {
+    val mySources = Sources.MySources()
+
+    Mono.zip(
+            mySources.loadFromPirateBay(),
+            mySources.reachOutToFriedWithNetflixSubscription()
+    ).map { (warrior, umbrella) ->
+        warrior.watch()
+        umbrella.watch()
+    }.subscribe()
+
     println("Hello form new main!")
-    listOf(java, kotlin)
-            .forEach { (version, language) ->
-                val (name, age, description) = language
-                print("""
-                    Version	Age     Name
-                    $version   $age    $name
-                """).also { println() }
-            }
+
 }
