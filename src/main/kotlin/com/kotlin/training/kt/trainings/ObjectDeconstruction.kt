@@ -19,7 +19,7 @@ interface Serial {
 
 interface Sources {
     fun loadFromPirateBay(): Mono<Serial>
-    fun watchOnNetflix(): Mono<Serial> = throw RuntimeException("No subscription available.")
+    fun watchOnNetflix(): Mono<Serial> = Mono.error { RuntimeException("No subscription available.") }
     fun reachOutToFriedWithNetflixSubscription(): Mono<Serial>
 
     class MySources : Sources {
@@ -43,6 +43,11 @@ fun main() {
         warrior.watch()
         umbrella.watch()
     }.subscribe()
+
+    runCatching {
+        mySources.watchOnNetflix().subscribe()
+    }.onFailure { println("We dont have netflix, lets go to PirateBay") }
+            .onSuccess { println("Yeeeees!") }
 
     println("Hello form new main!")
 
